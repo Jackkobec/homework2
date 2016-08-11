@@ -1,0 +1,197 @@
+package com.jss;
+
+
+public class Lesson {
+
+    public String lessonName;
+    public int lessonHourseAll;
+    public int lessonHourseWorked;
+    public float examPointer;
+
+
+    public Lesson() {
+        this("Не указано имя предмета", 48);
+    }
+
+    public Lesson(String lessonName, int lessonHourseAll) {
+        this.lessonName = lessonName;
+        this.lessonHourseAll = lessonHourseAll;
+        this.lessonHourseWorked = 0;
+        this.examPointer = 0;
+    }
+
+
+//
+//    int lessonsCount = 3;
+//    Lesson[] lessonsList = new Lesson[lessonsCount];
+
+    public String lesonToString() {
+        return String.format("LessonName: %s\nLessonHourseAll: %d\nLessonHourseWorked: %d\nExamPointer: %.2f",
+                lessonName, lessonHourseAll, lessonHourseWorked, examPointer);
+    }
+
+    public static String listAllLesson(Lesson[] lesonList) {
+        String resultString = "";
+        for (int i = 0; i < lesonList.length; i++) {
+            resultString += ("\n" + lesonList[i].lesonToString() + "\n");
+        }
+        return resultString;
+    }
+
+
+    public float takeAnExamination(Student student, Lesson leson) {
+        examPointer = 5;
+
+        return examPointer;
+    }
+
+    public float treturneExamPoiner(Student student, Lesson leson) {
+        examPointer = leson.examPointer;
+
+        return examPointer;
+    }
+
+    public void showLessonInfo() {
+        System.out.println(String.format("lessonName: %s, lessonHourseAll: %d, lessonHourseWorked: %d, examPointer: %d",
+                lessonName, lessonHourseAll, lessonHourseWorked, examPointer));
+    }
+
+    public float takeExamPointer(float examPointer) {
+        this.examPointer = examPointer;
+        return examPointer;
+    }
+}
+
+
+package com.jss;
+
+import static com.jss.Lesson.*;
+
+
+public class Student {
+    public String name;
+    public String adress;
+    public Lesson[] lessonsList;
+
+    public Student() {
+    }
+
+    public Student(String name, String adress, Lesson[] lessonsList) {
+    }
+
+    public Student(String name, String adress) {
+        this.name = name;
+        this.adress = adress;
+    }
+
+    public  String studentToString(Student student) {
+        return String.format("name: %s\nadress: %s\nlessonsList: %s\n",
+                student.name, student.adress, listAllLesson(student.lessonsList));
+    }
+
+    public String studentToString() {
+        return String.format("Name: %s\nAdress: %s\n\nLessonsList: %s\n",
+                name, adress,listAllLesson(lessonsList));
+    }
+
+    public static String listAllStudents(Student[] studentList) {
+        String resultString = "";
+        for (int i = 0; i < studentList.length; i++) {
+            resultString += ( studentList[i].studentToString() + "\n");
+        }
+        return resultString;
+    }
+
+
+    public int toLern(Lesson lesson) {
+        while (lesson.lessonHourseWorked <= lesson.lessonHourseAll) {
+            lesson.lessonHourseWorked++;
+        }
+        return lesson.lessonHourseWorked;
+    }
+
+    public Lesson[] lessonAdd(Lesson[] lessonsList) {
+        Lesson[] newLessonList = new Lesson[lessonsList.length + 1];
+        System.arraycopy(lessonsList, 0, newLessonList, 0, newLessonList.length);
+        newLessonList[newLessonList.length - 1] = new Lesson("ООП", 48);
+        return newLessonList;
+    }
+
+    public Lesson[] removelastleson(Lesson[] lessonsList) {
+        Lesson[] reduceLessonList = new Lesson[lessonsList.length - 1];
+        System.arraycopy(lessonsList, 0, reduceLessonList, 0, reduceLessonList.length);
+
+        return reduceLessonList;
+    }
+
+    //средний бал
+    public float takeGPA(Lesson[] lessonsList) {
+        float gpa = 0;
+
+        for (int i = 0; i < lessonsList.length; i++) {
+            gpa = lessonsList[i].examPointer + gpa;
+        }
+        return (gpa / lessonsList.length);
+    }
+
+}
+
+
+package com.jss;
+
+
+
+/**
+ *
+ */
+public class TestStudentsAndLessons {
+    public static void main(String[] args) {
+        Lesson algorithms = new Lesson("Algorithms", 32);
+        Lesson javase = new Lesson("Java SE", 48);
+        Lesson oop = new Lesson("OOP", 48);
+        Lesson fraimworksjava = new Lesson("Fraimworks Java", 48);
+        Lesson javaee = new Lesson("Java EE", 64);
+
+        Lesson[] lesonList = new Lesson[5];
+        lesonList[0] = algorithms;
+        lesonList[1] = javase;
+        lesonList[2] = oop;
+        lesonList[3] = fraimworksjava;
+        lesonList[4] = javaee;
+
+        Lesson[] st1LesonList = new Lesson[2];
+        st1LesonList[0] = algorithms;
+        st1LesonList[1] = javase;
+
+        Lesson[] st2LesonList = new Lesson[3];
+        st2LesonList[0] = javase;
+        st2LesonList[1] = oop;
+        st2LesonList[2] = fraimworksjava;
+
+        Lesson[] st3LesonList = new Lesson[4];
+        st3LesonList[0] = javase;
+        st3LesonList[1] = oop;
+        st3LesonList[2] = fraimworksjava;
+        st3LesonList[3] = javaee;
+       // System.out.println(oop.lesonToString());
+      //  System.out.println(listAllLesson(lesonList));
+
+
+        Student st1 = new Student("Vasa", "Puskina 23/42");
+
+        Student st2 = new Student();
+        st2.name = "Inokentiy";
+        st2.adress = "Pavlova str 20/50";
+        st2.lessonsList = st2LesonList;
+
+        Student st3 = new Student();
+
+        Student[] stlist = new Student[3];
+        stlist[0] = st1;
+        stlist[1] = st2;
+        stlist[2] = st3;
+
+        System.out.println(st2.studentToString());
+       //System.out.println(listAllStudents(stlist));
+    }
+}
