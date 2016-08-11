@@ -1,0 +1,609 @@
+package homework2.contactlist;
+
+/**
+ * Прошу не судить строго, программа написана по большей части в процедурном стиле
+ * с использованием ооп. Имеет полностью рабочий и протестированный
+ * функционал в соовествии с ТЗ. Писалась для практики и набития руки.
+ * В результате были сделаны интересные открытия и понимание плюсов ООП по сравнению с
+ * процедурной парадигмой, а так же ряд других инетерсных особенностей синтаксиса java.
+ *
+ *
+ * Руководство пользователя програмой:
+ * Список контактов представляет из себя массив контактов.
+ * Список контактов можно выводить на экран, добавлять в него новый контакт,
+ * находить контакт по номеру или имени, выводить киевстар или мтс контакты,
+ * выводить первые и последние 5 контактов, удалять последний контакт,
+ * удалять контакт по заданым критериям: имя или номер телефона, производить обновление
+ * информации нужного контакта. Реализована валидация ввода проверкой регулярами.
+ *
+ *Добавлено интерактивное меню.
+ */
+/**
+ * @autor   Jack:
+ * email:   jackkobec@gmail.com
+ * Skype:   skypejs77
+ * @version 2.0
+ */
+
+
+
+/**
+ * Класс для инициализации начального контакт листа с точкой входа в программу
+ */
+public class ConTest {
+    public static void main(String[] args) {
+        Contact contact0 = new Contact();
+        contact0.name = "Vasa";
+        contact0.phoneNamber = "093 1232323";
+
+
+        Contact contact1 = new Contact();
+        contact1.name = "Kola";
+        contact1.phoneNamber = "095 2323232";
+
+        Contact contact2 = new Contact();
+        contact2.name = "Petya";
+        contact2.phoneNamber = "097 2323232";
+
+        Contact contact3 = new Contact();
+        contact3.name = "Anna";
+        contact3.phoneNamber = "097 54545454";
+
+        Contact contact4 = new Contact();
+        contact4.name = "Lena";
+        contact4.phoneNamber = "095 1111111";
+
+        Contact contact5 = new Contact();
+        contact5.name = "Lada";
+        contact5.phoneNamber = "097 5555555";
+
+        Contact contact6 = new Contact();
+        contact6.name = "Nadia";
+        contact6.phoneNamber = "095 1212121";
+
+        Contact contact7 = new Contact();
+        contact7.name = "Jack";
+        contact7.phoneNamber = "095 7777777";
+
+        Contact contact8 = new Contact();
+        contact8.name = "Inokentiy";
+        contact8.phoneNamber = "095 8888888";
+
+        Contact contact9 = new Contact();
+        contact9.name = "Djon";
+        contact9.phoneNamber = "095 2323232";
+
+        Contact contact10 = new Contact();
+        contact10.name = "Inokentiy";
+        contact10.phoneNamber = "097 2121212";
+
+/**
+ * Инициализация начального контакт листа
+ */
+        int listIndex = 11;
+        Contact[] contactList = new Contact[listIndex];
+        contactList[0] = contact0;
+        contactList[1] = contact1;
+        contactList[2] = contact2;
+        contactList[3] = contact3;
+        contactList[4] = contact4;
+        contactList[5] = contact5;
+        contactList[6] = contact6;
+        contactList[7] = contact7;
+        contactList[8] = contact8;
+        contactList[9] = contact9;
+        contactList[10] = contact10;
+
+/**
+ * Перезапись исходного контакт листа в новый, с которым будем работать все время в дальнейшем.
+ * Подсчитывает количество контактов с заполненными полями.
+ * На случай если васяны решили запихнуть пару контактов с нуливыми полями и вызвать NullPointerException
+ */
+        int newIndex = Contact.contatcCoutnter(contactList);
+        Contact[] contactList2 = new Contact[newIndex];
+        System.arraycopy(contactList, 0, contactList2, 0, contactList2.length);
+
+        MainMenu.mainMenu(contactList2);
+
+
+    }
+
+
+}
+
+package homework2.contactlist;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.*;
+import java.io.*;
+/**
+ * Прошу не судить строго, программа написана по большей части в процедурном стиле
+ * с использованием ооп. Имеет полностью рабочий и протестированный
+ * функционал в соовествии с ТЗ. Писалась для практики и набития руки.
+ * В результате были сделаны интересные открытия и понимание плюсов ООП по сравнению с
+ * процедурной парадигмой, а так же ряд других инетерсных особенностей синтаксиса java.
+ *
+ *
+ * Руководство пользователя програмой:
+ * Список контактов представляет из себя массив контактов.
+ * Список контактов можно выводить на экран, добавлять в него новый контакт,
+ * находить контакт по номеру или имени, выводить киевстар или мтс контакты,
+ * выводить первые и последние 5 контактов, удалять последний контакт,
+ * удалять контакт по заданым критериям: имя или номер телефона, производить обновление
+ * информации нужного контакта. Реализована валидация ввода проверкой регулярами.
+ *
+ *Добавлено интерактивное меню.
+ */
+/**
+ * @autor   Jack:
+ * email:   jackkobec@gmail.com
+ * Skype:   skypejs77
+ * @version 2.0
+ */
+
+/**
+ * Класс Contact
+ */
+public class Contact {
+
+
+    public String name;
+    public String phoneNamber;
+
+
+    /**
+     * Конструктор контакта по умолчанию т.к. есть другой конструктор
+     */
+    Contact() {
+    }
+
+    /**
+     * Конструктор контакта с инициализацией полей
+     */
+    Contact(String initName, String initPhoneNamber) {
+        this.name = initName;
+        this.phoneNamber = initPhoneNamber;
+    }
+
+    /**
+     * Перегруженный метод, который показывает один контакт, переданный с аргументами
+     */
+    public void contactShow(String name, String phoneNamber) {
+        this.name = name;
+        this.phoneNamber = phoneNamber;
+        String result = String.format("\nname: %s\nphoneNamber: %s", name, phoneNamber + "\n------------------------");
+        System.out.println(result);
+
+    }
+
+    /**
+     * Метод, который показывает один контакт
+     */
+    public String contactShow() {
+        System.out.println(String.format("\nname: %s\nphoneNamber: %s ", name, phoneNamber
+                + "\n------------------------"));
+        return "";
+    }
+
+
+    /**
+     * Метод для добавления контакта с консоли
+     */
+    public Contact contactAdd() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\nДля записи имени используйте символы a-z, A-Z, 0-9, _\n" +
+                "Длина имени от 3 до 15 символов с учетом пробелов. Пример: Vasa Pyatochkin");
+        nameInput(sc);
+        validatorName(name);
+
+        System.out.println("\nДля записи номера используйте цифры 0-9.\n" +
+                "Длина номера от 7 до 14 символов с учетом пробелов. Допускаются проблелы. Пример: 097 777 77 77");
+        inputPhoneNamber(sc);
+        validatorPhone(phoneNamber);
+
+        return new Contact(name, phoneNamber);
+    }
+
+    /**
+     * Метод для ввода имени контакта с консоли
+     */
+    public void nameInput(Scanner sc) {
+        System.out.print("\n>>>Enter contact name: ");
+        this.name = sc.nextLine();
+    }
+    /**
+     * Метод для добавления номера телефона контакта с консоли
+     */
+    public void inputPhoneNamber(Scanner sc) {
+        System.out.print("\n>>>Enter contact phone: ");
+        this.phoneNamber = sc.nextLine();
+    }
+
+    /**
+     * Валидатор имени символы a-z, A-Z, 0-9, длина 3-15
+     */
+    public void validatorName(String name) {
+        Scanner sc = new Scanner(System.in);
+        while (!checkName()) {
+            System.out.println("Не правильно введено имя. Для записи имени используйте символы a-z, A-Z, 0-9, _\n" +
+                    "Длина имени от 3 до 15 символов с учетом пробелов. Пример: Vasa Pyatochkin");
+            nameInput(sc);
+        }
+
+    }
+    /**
+     * Валидатор иномера телефона символы -9, длина 7-14
+     */
+    public void validatorPhone(String phoneNamber) {
+        Scanner sc = new Scanner(System.in);
+        while (!checkPhoneNamber()) {
+            System.out.println("Не правильно введен номер телефона. Для записи номера используйте цифры 0-9.\n" +
+                    "Длина номера от 7 до 14 символов с учетом пробелов. Допускаются проблелы. Пример: 093 772 17 49");
+            inputPhoneNamber(sc);
+        }
+
+
+    }
+    /**
+     * Патерн валидации имени
+     */
+    public boolean checkName() {
+        Pattern p = Pattern.compile("^[\\sA-Za-z0-9_]{3,15}$");
+        Matcher m = p.matcher(name);
+        return m.matches();
+    }
+    /**
+     * Патерн валидации номера телефона
+     */
+    public boolean checkPhoneNamber() {
+
+        Pattern p = Pattern.compile("^[\\s0-9\\s]{7,14}$");
+        Matcher m = p.matcher(phoneNamber);
+        return m.matches();
+    }
+
+
+
+    /**
+     * Метод, который отображает переданный как аргумент список контактов
+     */
+    public static void contactListShowAll(Contact[] contactlist) {
+
+        for (int i = 0; i < contactlist.length; i++) {
+            //  Contact contact = contactlist[i];
+
+            System.out.println(contactlist[i].contactShow());
+        }
+
+    }
+
+    /**
+     * Метод для мультипоиска контакта по номеру телефона или имени
+     */
+    public static boolean findContactByNameOrPhone(String findParam, Contact[] contactList) {
+        boolean res = true;
+
+        for (int i = 0; i < contactList.length; i++) {
+            if (contactList[i].name.contains(findParam) || contactList[i].phoneNamber.contains(findParam)) {
+                System.out.println("По критерию " + findParam + " найден контакт:");
+                contactList[i].contactShow();
+            } else return false;
+
+
+        }
+
+
+        return res;
+
+    }
+
+    /**
+     * Метод, который подсчитывает количество контактов с информацией,
+     * Использовался чтобы определить сколько есть уже созданных контактов
+     * и использовать это количество как длину масива контактов во избежание
+     * null exeption при выводе
+     */
+    public static int contatcCoutnter(Contact[] contactList) {
+
+
+        int newIndex = 0;
+        for (int i = 0; i < contactList.length; i++)
+            if (contactList[i].name != null || contactList[i].phoneNamber != null)
+                newIndex++;
+        System.out.println("Count of non-empty contacts: " + newIndex + "\n");
+        return newIndex;
+    }
+
+    /**
+     * Добавление контакта в контакт-лист методом увиличения его размера на 1
+     */
+    public static Contact[] addInContactList(Contact[] contactList) {
+        // int extendedListIndex = contactList.length +1;
+        Contact[] extContactlist = new Contact[(contactList.length + 1)];
+        System.arraycopy(contactList, 0, extContactlist, 0, contactList.length);
+        extContactlist[extContactlist.length - 1] = new Contact().contactAdd();
+
+        contatcCoutnter(extContactlist);
+        contactListShowAll(extContactlist);
+        return extContactlist;
+    }
+
+    /**
+     * CПоказывает первые 5 контактов
+     */
+    public static void showFirstFiveContacts(Contact[] contactlist) {
+        for (int i = 0; i < 5; i++) {
+            Contact contact = contactlist[i];
+
+            System.out.println(contactlist[i].contactShow());
+        }
+    }
+
+    /**
+     * Показывает послежние 5 контактов
+     */
+    public static void showLastFiveContacts(Contact[] contactlist) {
+        for (int i = (contactlist.length - 5); i < contactlist.length; i++) {
+            Contact contact = contactlist[i];
+
+            System.out.println(contactlist[i].contactShow());
+        }
+    }
+
+    /**
+     * Показывает только МТС контакты
+     */
+    public static void showMtsContacts(Contact[] contactlist) {
+        for (int i = 0; i < contactlist.length; i++) {
+            if (contactlist[i].phoneNamber.substring(0, 3).contains("095")) {
+                System.out.println("MTC contact: ");
+                contactlist[i].contactShow();
+            }
+        }
+
+    }
+
+    /**
+     * Показывает тольлко Киевстар контакты
+     */
+    public static void showKievstarContacts(Contact[] contactlist) {
+        for (int i = 0; i < contactlist.length; i++) {
+            if (contactlist[i].phoneNamber.substring(0, 3).contains("097")) {
+                System.out.println("Kievstar contact: ");
+                contactlist[i].contactShow();
+            }
+        }
+
+    }
+
+    /**
+     * Медод для удаления последнего контакта, возвращает контактлист без последнего контакта
+     */
+    public static Contact[] removeLastContact(Contact[] contactList) {
+        Contact[] reducedContactList = new Contact[contactList.length - 1];
+        System.arraycopy(contactList, 0, reducedContactList, 0, reducedContactList.length);
+        return reducedContactList;
+    }
+
+    /**
+     * Медод для обновления контакта по мультипараметру(updateParam) - имени или номеру контакта.
+     * Совпавший по критериям контакт может находится в любом месте списка, он будет перезаписан,
+     * а список контактов возвращен методом.
+     */
+    public static Contact[] updateContactByParam(Contact[] contactList, String updateParam) {
+        Scanner sc = new Scanner(System.in);
+
+        for (int i = 0; i < contactList.length; i++) {
+            if (contactList[i].name.contains(updateParam) || contactList[i].phoneNamber.contains(updateParam)) {
+
+                System.out.println("Введите новое имя для  " + contactList[i].name + ":");
+                contactList[i].nameInput(sc);
+                contactList[i].validatorName(contactList[i].name);
+                System.out.println("ВВедите новый номер вместо " + contactList[i].phoneNamber + ":");
+                contactList[i].inputPhoneNamber(sc);
+                contactList[i].validatorPhone(contactList[i].phoneNamber);
+                System.arraycopy(contactList, 0, contactList, 0, contactList.length);
+            }
+        }
+        return contactList;
+    }
+
+    /**
+     * Медод для удаления контакта по мультипараметру(delParam) - имени или номеру контакта.
+     * Совпавший по критериям контакт может находится в любом месте списка, он будет удален,
+     * а список склеен из оставшихся контактов и возвращен методом.
+     *
+     * !!!Работает только, если в соотвествии с параметром удаления будет найдено не более 2 контактов!!!!
+     */
+    public static Contact[] removeContactByParam(Contact[] contactList, String delParam) {
+
+        Contact[] reducedContactList = new Contact[contactList.length - 1];
+        for (int i = 0; i < contactList.length; i++) {
+            if (contactList[i].name.contains(delParam) || contactList[i].phoneNamber.contains(delParam)) {
+                int delElemetnIndex = i;
+                System.arraycopy(contactList, 0, reducedContactList, 0, delElemetnIndex);
+                System.arraycopy(contactList, delElemetnIndex + 1, reducedContactList, delElemetnIndex, (contactList.length - delElemetnIndex - 1));
+
+            }
+
+
+        }
+        for (int i = 0; i < reducedContactList.length; i++) {
+            if (reducedContactList[i].name.contains(delParam) || reducedContactList[i].phoneNamber.contains(delParam)) {
+                Contact[] reducedContactList2 = new Contact[reducedContactList.length - 1];
+                int delElemetnIndex = i;
+                System.arraycopy(reducedContactList, 0, reducedContactList2, 0, delElemetnIndex);
+                System.arraycopy(reducedContactList, delElemetnIndex + 1, reducedContactList2, delElemetnIndex, (reducedContactList2.length - delElemetnIndex));
+                return reducedContactList2;
+            }
+
+
+        }
+        return reducedContactList;
+    }
+
+}
+
+package homework2.contactlist;
+
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+import static homework2.contactlist.Contact.updateContactByParam;
+/**
+ * @autor   Jack:
+ * email:   jackkobec@gmail.com
+ * Skype:   skypejs77
+ * @version 2.0
+ */
+/**
+ * Главное меню
+ */
+public class MainMenu {
+
+
+    public static void mainMenu(Contact[] contactList2) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Добро пожаловать в интерактивный контакт - лист!");
+        System.out.println(">>>>>>>MAIN MENU / ГЛАВНОЕ МЕНЮ<<<<<<<:");
+        System.out.println("Выберите действие");
+        System.out.println("\"0\" - Show All/Вывод на экран всех исходных контактов");
+        System.out.println("\"1\" - Show first 5 contacts/Показать первые 5 контактов");
+        System.out.println("\"2\" - Show last 5 contacts/Показать последние 5 контактов");
+        System.out.println("\"3\" - Show all MTC contacts/Показать все МТС контакты");
+        System.out.println("\"4\" - Show all Kievstar contacts/Показать все Киевстар контакты");
+        System.out.println("\"5\" - Remove Last Contact and show without him/Удалить последний контакт и показать без него");
+        System.out.println("\"6\" - Find contact by multiparameters(name or phone)/Поиск контакта по мультипараметру(имени или номеру)");
+        System.out.println("\"7\" - Add to the contactList from console/Добавление в контакт лист нового контакта из консоли");
+        System.out.println("\"8\" - Remove from contactList by multiparameters(name or phone) adn show contactList without him/\n" +
+                "Удаление контакта по мультипараметру(имени или номеру) и отображение контакт - листа без него");
+        System.out.println("\"9\" - Updating contact info. At first we find current contact by multiparameters(name or phone) and add new data\n" +
+                "from console");
+       // System.out.println("\"q\" - Exit from program/Выход из программы"); will be released later
+        System.out.print("Сделайте выбор пункта меню: ");
+
+//        System.out.println("=========================");
+
+        String selection = sc.nextLine();
+        String res = menuValidator(selection);
+
+        int sel = Integer.parseInt(res);
+
+        switch (sel) {
+            case 0: {
+                System.out.println("Все исходные контакты:");
+                Contact.contactListShowAll(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 1: {
+                System.out.println("Первые 5 контактов:");
+                Contact.showFirstFiveContacts(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 2: {
+                System.out.println("Последние 5 контактов:");
+                Contact.showLastFiveContacts(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 3: {
+                System.out.println("MTC contacts: \n");
+                Contact.showMtsContacts(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 4: {
+                System.out.println("Kievstar contacts: \n");
+                Contact.showKievstarContacts(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 5: {
+                System.out.println("Удаление последнего контакта и отображение без него:");
+                Contact.contactListShowAll(Contact.removeLastContact(contactList2));
+                subMenu(contactList2);
+            }
+            break;
+            case 6: {
+                System.out.println("Поиск контакта по мультипараметру(имени или номеру):");
+                System.out.println(Contact.findContactByNameOrPhone("Vasa", contactList2) == true ? "По таким критериям контакты не найдены" : "");
+                subMenu(contactList2);
+            }
+            break;
+            case 7: {
+                System.out.println("Добавление контакта в контакт-лист c консоли:");
+                Contact.addInContactList(contactList2);
+                subMenu(contactList2);
+            }
+            break;
+            case 8: {
+                System.out.println("Удаление контакта по мультипараметру(имени или номеру) и отображение контакт - листа без него");
+                Contact.contactListShowAll(Contact.removeContactByParam(contactList2, "Inokentiy"));
+                subMenu(contactList2);
+            }
+            break;
+            case 9: {
+                System.out.println("Обновление контакта, сначала находим его по мультипараметру поиска и вводлм новые данные с консоли");
+                Contact.contactListShowAll(updateContactByParam(contactList2, "Vasa"));
+                subMenu(contactList2);
+            }
+            break;
+        }
+    }
+    /**
+     * Подменю для возврата в главное меню по вводу 0
+     */
+    public static void subMenu(Contact[] contactList2) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Возврат в ГЛАВНОЕ МЕНЮ, нажмите \"0\"");
+        System.out.println("\"0\" - Return to the MAIN MENU");
+
+        int subSelect = sc.nextInt();
+        while (subSelect != 0) {
+            System.out.println("Incorrect Selection");
+            subSelect = sc.nextInt();
+
+        }
+        mainMenu(contactList2);
+    }
+    /**
+     * Валидатор вібора пункта меню
+     */
+    public static String menuValidator(String selection) {
+        Scanner sc = new Scanner(System.in);
+        while (!checkSelection(selection)) {
+            System.out.println("Не правильно введен пункт меню. ВВедите число от 0 до 9. Пример: 7");
+            selection = sc.nextLine();
+        }
+        return selection;
+    }
+    /**
+     * Патерн валидации выбора пункта меню, число 0-9, один символ
+     */
+    public static boolean checkSelection(String selection) {
+
+        Pattern p = Pattern.compile("^[0-9]{1}$");
+        Matcher m = p.matcher(selection);
+        return m.matches();
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
